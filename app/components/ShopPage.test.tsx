@@ -47,11 +47,18 @@ describe("ShopPage for Decatur", () => {
     }
   });
 
-  it("crops the storefront from the center by default", () => {
+  it("keeps the painted logo in frame by cropping toward the upper part", () => {
     render(<ShopPage shop={shop} />);
     const img = screen.getByRole("img", { name: shop.storefront.alt });
+    expect(img).toHaveClass("object-[center_15%]");
+    expect(img).not.toHaveClass("object-center");
+  });
+
+  it("crops the storefront from the center when no position is set", () => {
+    const plain = { ...shop, storefront: { ...shop.storefront, position: undefined } };
+    render(<ShopPage shop={plain} />);
+    const img = screen.getByRole("img", { name: shop.storefront.alt });
     expect(img).toHaveClass("object-center");
-    expect(img).not.toHaveClass("object-top");
   });
 
   it("embeds a titled map of the address", () => {

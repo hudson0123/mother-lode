@@ -8,6 +8,7 @@ import {
   interiors,
   mapEmbedUrl,
   shopList,
+  shopMetadata,
   shops,
   telHref,
 } from "./shops";
@@ -84,6 +85,11 @@ describe("link helpers", () => {
     expect(telHref("762-772-5554")).toBe("tel:+17627725554");
   });
 
+  it("does not double the country code on 11-digit numbers", () => {
+    expect(telHref("1-678-927-9635")).toBe("tel:+16789279635");
+    expect(telHref("+1 678 927 9635")).toBe("tel:+16789279635");
+  });
+
   it("URL-encodes the suite number and commas in directions links", () => {
     expect(directionsUrl(shops.decatur)).toBe(
       "https://www.google.com/maps/dir/?api=1&destination=3429%20Covington%20Hwy%20Ste%20B%2C%20Decatur%2C%20GA%2030032",
@@ -127,5 +133,16 @@ describe("photos", () => {
       ...shopList.flatMap((s) => s.insidePhotos),
     ];
     expect(placed).not.toContain(interiors.three);
+  });
+});
+
+describe("shopMetadata", () => {
+  it("builds the title and description from the shop facts", () => {
+    for (const shop of shopList) {
+      const meta = shopMetadata(shop);
+      expect(meta.title).toBe(shop.city);
+      expect(meta.description).toContain(fullAddress(shop));
+      expect(meta.description).toContain(brand.hours);
+    }
   });
 });

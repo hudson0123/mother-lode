@@ -15,8 +15,11 @@ export type ShopSlug = "decatur" | "athens";
 export type Photo = {
   src: StaticImageData;
   alt: string;
-  /** Which edge to keep when a frame crops the photo; defaults to the center. */
-  position?: "top";
+  /**
+   * Which part to keep when a frame crops the photo; defaults to the center.
+   * "upper" keeps a sign in the top quarter in frame. Only ShopPage's storefront frame honors this.
+   */
+  position?: "top" | "upper";
 };
 
 export type Shop = {
@@ -108,6 +111,7 @@ export const shops: Record<ShopSlug, Shop> = {
     storefront: {
       src: decaturStorefront,
       alt: "The Mother Lode Decatur storefront with its Vintage and Handmade sign",
+      position: "upper",
     },
     insidePhotos: [interiors.five, interiors.six, interiors.two, interiors.four],
   },
@@ -142,7 +146,8 @@ export function fullAddress(shop: Shop): string {
 }
 
 export function telHref(phone: string): string {
-  return `tel:+1${phone.replace(/\D/g, "")}`;
+  const digits = phone.replace(/\D/g, "");
+  return `tel:+${digits.length === 11 && digits.startsWith("1") ? digits : `1${digits}`}`;
 }
 
 export function directionsUrl(shop: Shop): string {
@@ -151,4 +156,11 @@ export function directionsUrl(shop: Shop): string {
 
 export function mapEmbedUrl(shop: Shop): string {
   return `https://maps.google.com/maps?q=${encodeURIComponent(fullAddress(shop))}&output=embed`;
+}
+
+export function shopMetadata(shop: Shop) {
+  return {
+    title: shop.city,
+    description: `${shop.name}: ${fullAddress(shop)}. ${brand.hours}.`,
+  };
 }

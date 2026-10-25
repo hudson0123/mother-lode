@@ -3,7 +3,7 @@ import { Inter, Lora, Yellowtail } from "next/font/google";
 
 import SiteFooter from "./components/SiteFooter";
 import SiteNav from "./components/SiteNav";
-import { brand } from "./data/shops";
+import { brand, shopList } from "./data/shops";
 import "./globals.css";
 
 const yellowtail = Yellowtail({
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     default: `${brand.name} | ${brand.tagline}`,
     template: `%s | ${brand.name}`,
   },
-  description: `${brand.name} is a ${brand.tagline.toLowerCase()} in Decatur and Athens, Georgia. ${brand.supporting}`,
+  description: `${brand.name} is a ${brand.tagline.toLowerCase()} in ${shopList.map((shop) => shop.city).join(" and ")}, Georgia. ${brand.supporting}`,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

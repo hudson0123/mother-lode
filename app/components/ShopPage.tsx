@@ -4,6 +4,11 @@ import { directionsUrl, mapEmbedUrl, telHref, type Shop } from "../data/shops";
 import HoursPill from "./HoursPill";
 import PhotoGrid from "./PhotoGrid";
 
+const POSITION_CLASS = {
+  top: "object-top",
+  upper: "object-[center_15%]",
+} as const;
+
 export default function ShopPage({ shop }: { shop: Shop }) {
   const tel = telHref(shop.phone);
 
@@ -15,9 +20,9 @@ export default function ShopPage({ shop }: { shop: Shop }) {
             src={shop.storefront.src}
             alt={shop.storefront.alt}
             fill
-            priority
+            preload
             sizes="(min-width: 1024px) 60vw, 100vw"
-            className={`object-cover ${shop.storefront.position === "top" ? "object-top" : "object-center"}`}
+            className={`object-cover ${shop.storefront.position ? POSITION_CLASS[shop.storefront.position] : "object-center"}`}
           />
         </div>
         <div className="flex flex-col justify-center border-b-2 border-ink bg-sage px-4 py-6 sm:px-6 lg:col-span-2 lg:border-l-2 lg:px-8">

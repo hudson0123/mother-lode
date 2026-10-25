@@ -13,7 +13,7 @@ export default function Home() {
           src={homeHero.src}
           alt={homeHero.alt}
           fill
-          priority
+          preload
           sizes="100vw"
           className="object-cover"
         />
@@ -22,6 +22,7 @@ export default function Home() {
             <Image
               src={brand.logo.src}
               alt={brand.logo.alt}
+              loading="eager"
               sizes="(min-width: 1024px) 146px, 112px"
               className="h-auto w-[66%]"
             />
