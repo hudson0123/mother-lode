@@ -47,6 +47,13 @@ describe("ShopPage for Decatur", () => {
     }
   });
 
+  it("crops the storefront from the center by default", () => {
+    render(<ShopPage shop={shop} />);
+    const img = screen.getByRole("img", { name: shop.storefront.alt });
+    expect(img).toHaveClass("object-center");
+    expect(img).not.toHaveClass("object-top");
+  });
+
   it("embeds a titled map of the address", () => {
     render(<ShopPage shop={shop} />);
     expect(screen.getByTitle("Map of Mother Lode Atlanta")).toHaveAttribute(
@@ -72,6 +79,11 @@ describe("ShopPage for Athens", () => {
     expect(
       screen.queryByText("An indoor market of local vendors and makers."),
     ).toBeNull();
+  });
+
+  it("crops the storefront from the top so the sign stays in frame", () => {
+    render(<ShopPage shop={shop} />);
+    expect(screen.getByRole("img", { name: shop.storefront.alt })).toHaveClass("object-top");
   });
 
   it("calls the Athens number", () => {

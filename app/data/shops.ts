@@ -12,7 +12,12 @@ import interior6 from "@/public/motherlodeinterior6.webp";
 
 export type ShopSlug = "decatur" | "athens";
 
-export type Photo = { src: StaticImageData; alt: string };
+export type Photo = {
+  src: StaticImageData;
+  alt: string;
+  /** Which edge to keep when a frame crops the photo; defaults to the center. */
+  position?: "top";
+};
 
 export type Shop = {
   slug: ShopSlug;
@@ -124,6 +129,7 @@ export const shops: Record<ShopSlug, Shop> = {
     storefront: {
       src: athensStorefront,
       alt: "The Mother Lode Athens sign on Baxter Street",
+      position: "top",
     },
     insidePhotos: [interiors.one, interiors.six, interiors.four, interiors.five],
   },

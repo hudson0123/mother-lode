@@ -8,8 +8,16 @@ afterEach(() => {
 
 // next/image needs the Next.js runtime; in tests a plain <img> is enough.
 vi.mock("next/image", () => ({
-  default: ({ src, alt }: { src: string | { src: string }; alt: string }) => (
+  default: ({
+    src,
+    alt,
+    className,
+  }: {
+    src: string | { src: string };
+    alt: string;
+    className?: string;
+  }) => (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={typeof src === "string" ? src : src.src} alt={alt} />
+    <img src={typeof src === "string" ? src : src.src} alt={alt} className={className} />
   ),
 }));

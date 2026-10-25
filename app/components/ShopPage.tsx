@@ -17,7 +17,7 @@ export default function ShopPage({ shop }: { shop: Shop }) {
             fill
             priority
             sizes="(min-width: 1024px) 60vw, 100vw"
-            className="object-cover"
+            className={`object-cover ${shop.storefront.position === "top" ? "object-top" : "object-center"}`}
           />
         </div>
         <div className="flex flex-col justify-center border-b-2 border-ink bg-sage px-4 py-6 sm:px-6 lg:col-span-2 lg:border-l-2 lg:px-8">
