@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { directionsUrl, mapEmbedUrl, shops } from "../data/shops";
+import { brand, directionsUrl, mapEmbedUrl, shops } from "../data/shops";
 import ShopPage from "./ShopPage";
 
 describe("ShopPage for Decatur", () => {
@@ -10,12 +10,11 @@ describe("ShopPage for Decatur", () => {
   it("opens with the storefront and the visit details", () => {
     render(<ShopPage shop={shop} />);
     expect(screen.getByRole("img", { name: shop.storefront.alt })).toBeInTheDocument();
-    expect(screen.getByText("Decatur")).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { level: 1, name: "Mother Lode Atlanta" }),
     ).toBeInTheDocument();
-    expect(screen.getByText(/3429 Covington Hwy Ste B/)).toBeInTheDocument();
-    expect(screen.getByText("Open daily · 11am–7pm")).toBeInTheDocument();
+    expect(screen.getAllByText(/3429 Covington Hwy Ste B/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(brand.hours).length).toBeGreaterThan(0);
   });
 
   it("calls and gets directions with working links", () => {
@@ -29,6 +28,10 @@ describe("ShopPage for Decatur", () => {
       "tel:+16789279635",
     );
     expect(screen.getByRole("link", { name: "Get directions" })).toHaveAttribute(
+      "href",
+      directionsUrl(shop),
+    );
+    expect(screen.getByRole("link", { name: "Open in Google Maps" })).toHaveAttribute(
       "href",
       directionsUrl(shop),
     );
@@ -69,20 +72,30 @@ describe("ShopPage for Decatur", () => {
     );
   });
 
-  it("orders the sections offerings, inside, find us", () => {
+  it("orders the sections offerings, inside, find us, other shop", () => {
     render(<ShopPage shop={shop} />);
     expect(
       screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent),
-    ).toEqual(["30 to 50 local vendors & makers", "Inside", "Find us"]);
+    ).toEqual(["30 to 50 local vendors & makers", "A look around", "Getting here", "Mother Lode Athens"]);
+  });
+
+  it("points to the Athens shop", () => {
+    render(<ShopPage shop={shop} />);
+    expect(screen.getByRole("link", { name: "Visit the Athens shop" })).toHaveAttribute(
+      "href",
+      "/athens",
+    );
   });
 });
 
 describe("ShopPage for Athens", () => {
   const shop = shops.athens;
 
-  it("uses the generic heading and no intro line", () => {
+  it("uses its own heading and no intro line", () => {
     render(<ShopPage shop={shop} />);
-    expect(screen.getByRole("heading", { name: "What you'll find" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Retro, vintage and handmade" }),
+    ).toBeInTheDocument();
     expect(
       screen.queryByText("An indoor market of local vendors and makers."),
     ).toBeNull();
@@ -98,6 +111,14 @@ describe("ShopPage for Athens", () => {
     expect(screen.getByRole("link", { name: "Call" })).toHaveAttribute(
       "href",
       "tel:+17627725554",
+    );
+  });
+
+  it("points back to the Decatur shop", () => {
+    render(<ShopPage shop={shop} />);
+    expect(screen.getByRole("link", { name: "Visit the Decatur shop" })).toHaveAttribute(
+      "href",
+      "/decatur",
     );
   });
 });

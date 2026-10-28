@@ -3,38 +3,36 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { brand } from "../data/shops";
-
-const links = [
-  { href: "/", label: "Home" },
-  { href: "/decatur", label: "Decatur" },
-  { href: "/athens", label: "Athens" },
-];
+import { brand, shopList } from "../data/shops";
 
 export default function SiteNav() {
   const pathname = usePathname();
 
   return (
-    <header className="border-b-2 border-ink bg-sage">
-      <nav className="mx-auto flex max-w-6xl items-center gap-3 px-3 py-2 sm:gap-6 sm:px-6">
-        <Link href="/" className="mr-auto font-script text-[22px] leading-none text-black sm:text-3xl">
+    <header className="border-b border-ink/12 bg-paper">
+      <nav className="mx-auto flex max-w-6xl items-center gap-5 px-5 py-3.5 md:gap-6 md:px-12 md:py-4">
+        <Link href="/" className="mr-auto font-script text-[28px] leading-none md:text-[34px]">
           {brand.name}
         </Link>
-        {links.map(({ href, label }) => {
-          const current = pathname === href;
-          return (
-            <Link
-              key={href}
-              href={href}
-              aria-current={current ? "page" : undefined}
-              className={`border-b-2 py-1 text-[13px] font-semibold sm:text-sm ${
-                current ? "border-ink" : "border-transparent hover:border-ink/40"
-              }`}
-            >
-              {label}
-            </Link>
-          );
-        })}
+        <ul aria-label="Site" className="flex gap-5 md:gap-6">
+          {shopList.map((shop) => {
+            const href = `/${shop.slug}`;
+            const current = pathname === href;
+            return (
+              <li key={shop.slug}>
+                <Link
+                  href={href}
+                  aria-current={current ? "page" : undefined}
+                  className={`block border-b-2 py-1 text-[13.5px] font-medium ${
+                    current ? "border-gold" : "border-transparent hover:border-ink/30"
+                  }`}
+                >
+                  {shop.city}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
       </nav>
     </header>
   );

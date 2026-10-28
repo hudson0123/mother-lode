@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const pathname = vi.hoisted(() => ({ current: "/decatur" }));
@@ -17,23 +17,23 @@ describe("SiteNav", () => {
     expect(screen.queryByRole("img")).toBeNull();
   });
 
-  it("links to every page", () => {
+  it("links to the two shops only", () => {
     render(<SiteNav />);
-    expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute("href", "/");
-    expect(screen.getByRole("link", { name: "Decatur" })).toHaveAttribute("href", "/decatur");
-    expect(screen.getByRole("link", { name: "Athens" })).toHaveAttribute("href", "/athens");
+    const links = within(screen.getByRole("list", { name: "Site" })).getAllByRole("link");
+    expect(links.map((a) => [a.textContent, a.getAttribute("href")])).toEqual([
+      ["Decatur", "/decatur"],
+      ["Athens", "/athens"],
+    ]);
   });
 
   it("marks only the current page", () => {
     render(<SiteNav />);
     expect(screen.getByRole("link", { name: "Decatur" })).toHaveAttribute("aria-current", "page");
     expect(screen.getByRole("link", { name: "Athens" })).not.toHaveAttribute("aria-current");
-    expect(screen.getByRole("link", { name: "Home" })).not.toHaveAttribute("aria-current");
   });
 
-  it("marks Home on the home page", () => {
-    pathname.current = "/";
+  it("shows the links directly, with no menu button", () => {
     render(<SiteNav />);
-    expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute("aria-current", "page");
+    expect(screen.queryByRole("button")).toBeNull();
   });
 });

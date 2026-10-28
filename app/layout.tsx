@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Inter, Lora, Yellowtail } from "next/font/google";
+import { Fraunces, Inter, Yellowtail } from "next/font/google";
 
 import SiteFooter from "./components/SiteFooter";
 import SiteNav from "./components/SiteNav";
+import TopBar from "./components/TopBar";
 import { brand, shopList } from "./data/shops";
 import "./globals.css";
 
@@ -12,8 +13,8 @@ const yellowtail = Yellowtail({
   subsets: ["latin"],
 });
 
-const lora = Lora({
-  variable: "--font-lora",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
 });
 
@@ -34,9 +35,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${yellowtail.variable} ${lora.variable} ${inter.variable} h-full antialiased`}
+      className={`${yellowtail.variable} ${fraunces.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
+        <TopBar />
         <SiteNav />
         <main className="flex-1">{children}</main>
         <SiteFooter />

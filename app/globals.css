@@ -1,16 +1,19 @@
 @import "tailwindcss";
 
 @theme {
-  --color-sage: #a9bb87;
+  /* Matches the logo's background so the logo blends into green sections. */
+  --color-sage: #b0ba84;
   --color-sage-light: #e6ecd9;
   --color-ink: #1b1b1b;
   --color-gold: #d9a521;
   --color-paper: #fbfaf5;
+  /* Small labels on white sections. */
+  --color-olive: #4d5a36;
 }
 
 @theme inline {
   --font-script: var(--font-yellowtail);
-  --font-serif: var(--font-lora);
+  --font-serif: var(--font-fraunces);
   --font-sans: var(--font-inter);
 }
 

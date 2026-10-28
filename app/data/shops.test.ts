@@ -2,14 +2,18 @@ import { describe, expect, it } from "vitest";
 import {
   brand,
   directionsUrl,
+  findTiles,
   fullAddress,
   homeHero,
-  homeInsidePhotos,
+  instagramFallbackPhotos,
   interiors,
   mapEmbedUrl,
+  otherShop,
+  sell,
   shopList,
   shopMetadata,
   shops,
+  story,
   telHref,
 } from "./shops";
 
@@ -18,9 +22,43 @@ describe("brand", () => {
     expect(brand.name).toBe("Mother Lode");
     expect(brand.tagline).toBe("Vintage & makers market");
     expect(brand.supporting).toBe("Goods and gifts for you and your home.");
-    expect(brand.hours).toBe("Open daily · 11am–7pm");
+    expect(brand.hours).toBe("Open daily, 11am–7pm");
     expect(brand.instagram).toBe("https://www.instagram.com/motherlodeatl/");
+    expect(brand.instagramHandle).toBe("@motherlodeatl");
     expect(brand.facebook).toBe("https://www.facebook.com/motherlodeatl/");
+  });
+
+  it("has the hero line", () => {
+    expect(brand.heroLine).toBe(
+      "Goods and gifts for you and your home, from dozens of local vendors. Two shops in Decatur and Athens, open every day.",
+    );
+  });
+});
+
+describe("home copy", () => {
+  it("attributes the story quote to the owner", () => {
+    expect(story.heading).toBe("From estate sales to two shops full of local makers");
+    expect(story.quoteBy).toBe("Lindsay Short, owner");
+  });
+
+  it("sends vendors to the Decatur phone", () => {
+    expect(sell.heading).toBe("Have a booth at Mother Lode");
+    expect(sell.phone).toBe("678-927-9635");
+  });
+
+  it("labels the four what-you'll-find tiles", () => {
+    expect(findTiles.map((tile) => tile.label)).toEqual([
+      "Vintage clothing",
+      "Mid-century furniture",
+      "Lighting & decor",
+      "Toys, comics & records",
+    ]);
+    expect(findTiles.map((tile) => tile.photo)).toEqual([
+      interiors.four,
+      interiors.two,
+      interiors.five,
+      interiors.six,
+    ]);
   });
 });
 
@@ -56,7 +94,7 @@ describe("shops", () => {
       street: "1005 Baxter St",
       locality: "Athens, GA 30606",
       phone: "762-772-5554",
-      offeringsHeading: "What you'll find",
+      offeringsHeading: "Retro, vintage and handmade",
     });
     expect(shops.athens.intro).toBeUndefined();
     expect(shops.athens.offerings).toEqual([
@@ -70,6 +108,11 @@ describe("shops", () => {
 
   it("lists Decatur before Athens", () => {
     expect(shopList.map((s) => s.slug)).toEqual(["decatur", "athens"]);
+  });
+
+  it("points each shop at the other one", () => {
+    expect(otherShop(shops.decatur)).toBe(shops.athens);
+    expect(otherShop(shops.athens)).toBe(shops.decatur);
   });
 });
 
@@ -104,34 +147,47 @@ describe("link helpers", () => {
 });
 
 describe("photos", () => {
+  const placed = [
+    homeHero,
+    ...findTiles.map((tile) => tile.photo),
+    ...instagramFallbackPhotos,
+    ...shopList.flatMap((s) => [s.storefront, s.offeringsPhoto, ...s.insidePhotos]),
+  ];
+
   it("gives every photo real alt text", () => {
-    const all = [
-      brand.logo,
-      homeHero,
-      ...homeInsidePhotos,
-      ...shopList.flatMap((s) => [s.storefront, ...s.insidePhotos]),
-    ];
-    for (const photo of all) {
+    for (const photo of [brand.logo, ...placed]) {
       expect(photo.alt.trim().length).toBeGreaterThan(0);
     }
   });
 
-  it("uses the wide interior as the home hero and the approved home grid", () => {
+  it("uses the wide interior as the home hero", () => {
     expect(homeHero).toBe(interiors.one);
-    expect(homeInsidePhotos).toEqual([
+  });
+
+  it("assigns each shop its offerings and inside photos", () => {
+    expect(shops.decatur.offeringsPhoto).toBe(interiors.five);
+    expect(shops.decatur.insidePhotos).toEqual([interiors.four, interiors.six, interiors.two]);
+    expect(shops.athens.offeringsPhoto).toBe(interiors.one);
+    expect(shops.athens.insidePhotos).toEqual([
       interiors.five,
-      interiors.four,
       interiors.six,
+      interiors.four,
       interiors.two,
     ]);
   });
 
+  it("keeps the Orphintage photo off Decatur", () => {
+    const decatur = shops.decatur;
+    expect([decatur.storefront, decatur.offeringsPhoto, ...decatur.insidePhotos]).not.toContain(
+      interiors.one,
+    );
+  });
+
+  it("has six Instagram fallback photos", () => {
+    expect(instagramFallbackPhotos).toHaveLength(6);
+  });
+
   it("keeps the power-strip photo off every page", () => {
-    const placed = [
-      homeHero,
-      ...homeInsidePhotos,
-      ...shopList.flatMap((s) => s.insidePhotos),
-    ];
     expect(placed).not.toContain(interiors.three);
   });
 });

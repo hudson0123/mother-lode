@@ -28,8 +28,21 @@ describe("SiteFooter", () => {
     );
   });
 
-  it("shows the hours", () => {
+  it("lists both phone numbers", () => {
     render(<SiteFooter />);
-    expect(screen.getByText("Open daily · 11am–7pm")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "678-927-9635" })).toHaveAttribute(
+      "href",
+      "tel:+16789279635",
+    );
+    expect(screen.getByRole("link", { name: "762-772-5554" })).toHaveAttribute(
+      "href",
+      "tel:+17627725554",
+    );
+  });
+
+  it("shows the tagline and the hours", () => {
+    render(<SiteFooter />);
+    expect(screen.getByText("Vintage & makers market")).toBeInTheDocument();
+    expect(screen.getByText("Open daily, 11am–7pm")).toBeInTheDocument();
   });
 });

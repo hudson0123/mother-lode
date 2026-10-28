@@ -27,6 +27,20 @@ npm test
 
 Shop facts (addresses, phones, hours, offerings) and photos live in `app/data/shops.ts`; edit them there and every page updates.
 
+## Live Instagram strip (Behold)
+
+The "New in the shops" section on the home page shows the six latest @motherlodeatl posts through [Behold](https://behold.so). Until it is set up, or whenever the feed is unavailable, the section shows shop photos that link to the Instagram profile instead.
+
+To connect it:
+
+1. Create a free account at [behold.so](https://behold.so).
+2. Connect the @motherlodeatl Instagram account.
+3. Create a feed and choose the JSON feed option.
+4. Copy the feed ID (the last part of the feed URL, `https://feeds.behold.so/<FEED_ID>`) into a Vercel environment variable named `BEHOLD_FEED_ID`.
+5. Redeploy.
+
+Behold's free plan shows up to six posts, refreshes once a day, and allows 1,200 feed views a month (the feed pauses until the next month if that runs out). The site only asks Behold for posts every few hours, not once per visitor, so it stays well under that.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

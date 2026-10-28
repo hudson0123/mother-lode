@@ -17,7 +17,7 @@ export type Photo = {
   alt: string;
   /**
    * Which part to keep when a frame crops the photo; defaults to the center.
-   * "upper" keeps a sign in the top quarter in frame. Only ShopPage's storefront frame honors this.
+   * "upper" keeps a sign in the top quarter in frame. Only storefront frames honor this.
    */
   position?: "top" | "upper";
 };
@@ -34,6 +34,9 @@ export type Shop = {
   intro?: string;
   offerings: string[];
   storefront: Photo;
+  /** Sits beside the offerings list. */
+  offeringsPhoto: Photo;
+  /** Three or four photos for the Inside grid. */
   insidePhotos: Photo[];
 };
 
@@ -41,8 +44,11 @@ export const brand = {
   name: "Mother Lode",
   tagline: "Vintage & makers market",
   supporting: "Goods and gifts for you and your home.",
-  hours: "Open daily · 11am–7pm",
+  heroLine:
+    "Goods and gifts for you and your home, from dozens of local vendors. Two shops in Decatur and Athens, open every day.",
+  hours: "Open daily, 11am–7pm",
   instagram: "https://www.instagram.com/motherlodeatl/",
+  instagramHandle: "@motherlodeatl",
   facebook: "https://www.facebook.com/motherlodeatl/",
   logo: {
     src: logo,
@@ -81,12 +87,21 @@ export const interiors = {
 
 export const homeHero: Photo = interiors.one;
 
-export const homeInsidePhotos: Photo[] = [
-  interiors.five,
-  interiors.four,
-  interiors.six,
-  interiors.two,
+export const findTiles: { label: string; photo: Photo }[] = [
+  { label: "Vintage clothing", photo: interiors.four },
+  { label: "Mid-century furniture", photo: interiors.two },
+  { label: "Lighting & decor", photo: interiors.five },
+  { label: "Toys, comics & records", photo: interiors.six },
 ];
+
+// From 2023 press coverage (Red & Black, Athens Magazine); the owner checks it before launch.
+export const story = {
+  heading: "From estate sales to two shops full of local makers",
+  body: "Lindsay Short grew up tagging along to estate sales with her antique-dealer parents. After years running Bennett and Sudderth, an estate sale company named for her grandmothers, she opened Mother Lode in Decatur in 2021 and in Athens in 2023.",
+  quote:
+    "I love being able to support more than 40 small businesses and give them a space where they don't have to take on a lot of overhead.",
+  quoteBy: "Lindsay Short, owner",
+};
 
 export const shops: Record<ShopSlug, Shop> = {
   decatur: {
@@ -113,7 +128,9 @@ export const shops: Record<ShopSlug, Shop> = {
       alt: "The Mother Lode Decatur storefront with its Vintage and Handmade sign",
       position: "upper",
     },
-    insidePhotos: [interiors.five, interiors.six, interiors.two, interiors.four],
+    offeringsPhoto: interiors.five,
+    // interiors.one shows the Orphintage sign, which is in the Athens shop.
+    insidePhotos: [interiors.four, interiors.six, interiors.two],
   },
   athens: {
     slug: "athens",
@@ -122,7 +139,7 @@ export const shops: Record<ShopSlug, Shop> = {
     street: "1005 Baxter St",
     locality: "Athens, GA 30606",
     phone: "762-772-5554",
-    offeringsHeading: "What you'll find",
+    offeringsHeading: "Retro, vintage and handmade",
     offerings: [
       "Retro and vintage clothing",
       "Unique home goods",
@@ -135,11 +152,32 @@ export const shops: Record<ShopSlug, Shop> = {
       alt: "The Mother Lode Athens sign on Baxter Street",
       position: "top",
     },
-    insidePhotos: [interiors.one, interiors.six, interiors.four, interiors.five],
+    offeringsPhoto: interiors.one,
+    insidePhotos: [interiors.five, interiors.six, interiors.four, interiors.two],
   },
 };
 
 export const shopList: Shop[] = [shops.decatur, shops.athens];
+
+export function otherShop(shop: Shop): Shop {
+  return shop.slug === "decatur" ? shops.athens : shops.decatur;
+}
+
+export const sell = {
+  heading: "Have a booth at Mother Lode",
+  body: "Interested in selling at Mother Lode? Give us a call to ask about booth space in either shop.",
+  phone: shops.decatur.phone,
+};
+
+// Shown in the Instagram strip until the Behold feed is connected, or when it is down.
+export const instagramFallbackPhotos: Photo[] = [
+  interiors.five,
+  interiors.six,
+  interiors.four,
+  interiors.two,
+  interiors.one,
+  shops.athens.storefront,
+];
 
 export function fullAddress(shop: Shop): string {
   return `${shop.street}, ${shop.locality}`;
